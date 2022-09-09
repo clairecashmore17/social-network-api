@@ -2,7 +2,7 @@
 
 ## Contact
 
-<h2> made by <a href = "github.com/clairecashmore17">clairecashmore17</a></h2>
+<p> made by <a href = "github.com/clairecashmore17">clairecashmore17</a></p>
 <p>contact at clairecashmore2017@gmail.com </p> 
  
 ## Description
