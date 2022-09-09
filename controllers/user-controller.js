@@ -6,6 +6,12 @@ const userController = {
   //find all users
   getAllUsers(req, res) {
     User.find({})
+      // using populate to see all of our joined results on insomnia
+      .populate({
+        path: "thoughts",
+        select: "-__v",
+      })
+      .select("-__v")
       .then((dbUserData) => res.json(dbUserData))
       .catch((err) => {
         console.log(err);

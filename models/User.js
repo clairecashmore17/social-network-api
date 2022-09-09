@@ -30,6 +30,12 @@ const UserSchema = new Schema(
         ref: "User",
       },
     ],
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
     createdAt: {
       type: Date,
       default: Date.now,
