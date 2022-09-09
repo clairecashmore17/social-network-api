@@ -1,4 +1,4 @@
-const { User } = require("../models");
+const { User, Thought } = require("../models");
 
 const userController = {
   //all of our routing functions for a user
@@ -22,6 +22,11 @@ const userController = {
   //find one user
   findUserById({ params }, res) {
     User.findOne({ _id: params.id })
+      .populate({
+        path: "thoughts",
+        select: "-__v",
+      })
+      .select("-__v")
       .then((dbUserData) => {
         //If there is no user found with this _id...
         if (!dbUserData) {
@@ -58,14 +63,16 @@ const userController = {
   },
   //Delete a user
   deleteUser({ params }, res) {
-    User.findOneAndDelete({ _id: params.id })
-      .then((dbUserData) => {
-        //if no user found with id
-        if (!dbUserData) {
-          res.status(404).json({ message: "No user found with this id" });
-          return;
-        }
-        res.json(dbUserData);
+    Thought.deleteMany({ userId: params.id })
+      .then(() => {
+        User.findOneAndDelete({ _id: params.id }).then((dbUserData) => {
+          //if no user found with id
+          if (!dbUserData) {
+            res.status(404).json({ message: "No user found with this id" });
+            return;
+          }
+          res.json(dbUserData);
+        });
       })
       .catch((err) => {
         console.log(err);

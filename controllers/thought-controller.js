@@ -1,9 +1,61 @@
 const { Thought, User } = require("../models");
 
 const thoughtController = {
+  //find all thoughts
+  findAllThoughts(req, res) {
+    Thought.find({})
+
+      .set("-__v")
+      .sort({ _id: -1 })
+      .then((dbThoughtData) => res.json(dbThoughtData))
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+  //find one thought
+  findOneThought({ params }, res) {
+    Thought.findOne({ _id: params.id })
+      .set("-__v")
+      .then((dbThoughtData) => {
+        //if there is no thought found with this id
+        if (!dbThoughtData) {
+          res.status(404).json({ message: "No thought found with this id!" });
+          return;
+        }
+        res.json(dbThoughtData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(400).json(err);
+      });
+  },
+  //update a thought
+  updateThought({ params, body }, res) {
+    Thought.findOneAndUpdate(
+      {
+        _id: params.id,
+      },
+      body,
+      {
+        new: true,
+        runValidators: true,
+      }
+    )
+      .then((dbThoughtData) => {
+        //if there is no thought found at this id
+        if (!dbThoughtData) {
+          res.status(404).json({ message: "No thought found with this id" });
+          return;
+        }
+        res.json(dbThoughtData);
+      })
+      .catch((err) => res.status(400).json(err));
+  },
   //add a thought about something
   addThought({ params, body }, res) {
     Thought.create(body)
+
       .then(({ _id }) => {
         return User.findOneAndUpdate(
           {
